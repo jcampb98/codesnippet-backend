@@ -81,15 +81,15 @@ class UserController extends Controller
             $token = Auth::attempt($credentials);
             if(!$token) {
                 return response() -> json([
-                    'status' => false,
-                   'message' => 'Unauthorized',
+                    'status' => 'error',
+                    'message' => 'Unauthorized',
                 ], 401);
             }
 
             $user = Auth::user();
 
             return response() -> json([
-                'status' => true,
+                'status' => 'success',
                 'user' => $user,
                 'authorisation' => [
                     'token' => $token,
@@ -99,7 +99,7 @@ class UserController extends Controller
         }
         catch(\Throwable $error) {
             return response() -> json([
-                'status' => false,
+                'status' => 'error',
                 'message' => $error -> getMessage(),
             ], 500);
         }
