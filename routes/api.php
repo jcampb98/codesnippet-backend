@@ -1,7 +1,19 @@
 <?php
 
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CodeController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/auth/register', [UserController::class, 'createUser']);
-Route::post('/auth/login', [UserController::class, 'loginUser']);
+Route::controller(UserController::class) -> group(function () {
+    Route::post('/auth/register', 'register');
+    Route::post('/auth/login', 'login');
+    Route::post('/logout', 'login');
+    Route::post('/auth/refresh', 'login');
+});
+
+Route::controller(CodeController::class) -> group(function () {
+    Route::post('/code/create', 'create');
+    Route::get('/code/{id}', 'show');
+    Route::put('/code/{id}', 'update');
+    Route::delete('/code/{id}', 'destroy');
+});
