@@ -13,7 +13,7 @@ class UserController extends Controller
 {
 
     public function __construct() {
-        $this -> middleware("auth:api", ['except' => ['createUser', 'loginUser']]);
+        $this -> middleware("auth:api", ['except' => ['register', 'login']]);
     }
 
     public function register(Request $request) {
