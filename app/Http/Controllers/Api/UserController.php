@@ -37,7 +37,7 @@ class UserController extends Controller
             return response() -> json([
                 'status' => true,
                 'message' => 'User Created Successfully',
-                'token' => $user -> createToken("API TOKEN") -> plaintTextToken
+                'token' => $user -> createToken("API TOKEN") -> plainTextToken
             ], 200);
         }
         catch(\Throwable $error) {
@@ -75,7 +75,7 @@ class UserController extends Controller
             return response() -> json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
-                'token' => $user -> createToken("API TOKEN") -> plaintTextToken
+                'token' => $user -> createToken("API TOKEN") -> plainTextToken
             ], 200);
         }
         catch(\Throwable $error) {
