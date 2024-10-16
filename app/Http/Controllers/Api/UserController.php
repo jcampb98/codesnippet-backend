@@ -103,6 +103,29 @@ class UserController extends Controller
         }
     }
 
+    public function getUserDetails() {
+        $user = Auth::user();
+
+        if(!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        return response() -> json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+
+    public function validateToken() {
+        $user = Auth::user();
+        if(!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        return response()->json(['user' => $user], 200);
+    }
+
     public function logout() {
         Auth::logout();
         return response() -> json([
