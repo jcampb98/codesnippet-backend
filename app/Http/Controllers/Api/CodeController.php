@@ -5,22 +5,26 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
+use App\Models\Code;
 
 class CodeController extends Controller
 {
     public function __construct() {
-        $this->middleware("auth:api");
+        $this->middleware(["auth:api", "throttle:60,1"]);
     }
 
     public function create(Request $request) {
+        // Check if the user is authorized to create a code snippet
+        $this->authorize('create', Code::class);
+
         $request -> validate([
-            'title' => $request -> title,
-            'code_snippet' => $request -> code_snippet,
+            'title' => 'required|string|max:255', // Ensure title is required and a string and max length is 255
+            'code_snippet' => 'required|string|max:500',
         ]);
 
         $code = Code::create([
-            'title' => $request -> title,
-            'code_snippet' => $request -> code_snippet,
+            'title' => $request -> input('title'),
+            'code_snippet' => $request -> input('code_snippet'),
             'user_id' => Auth::id(),
         ]);
 
@@ -32,6 +36,9 @@ class CodeController extends Controller
     }
 
     public function show($id) {
+        // Check if the user is authorized to view a code snippet
+        $this->authorize('show', Code::class);
+
         $code = Code::find($id);
 
         if(!$code) {
@@ -48,6 +55,9 @@ class CodeController extends Controller
     }
 
     public function update(Request $request, $id) {
+        // Check if the user is authorized to update a code snippet
+        $this->authorize('update', Code::class);
+
         $request -> validate([
             'title' => 'required|string|max:255',
             'code' => 'required|string|max:255',
@@ -74,6 +84,9 @@ class CodeController extends Controller
     }
 
     public function destroy($id) {
+        // Check if the user is authorized to delete a code snippet
+        $this->authorize('destroy', Code::class);
+
         $code = Code::find($id);
 
         if(!$code) {
