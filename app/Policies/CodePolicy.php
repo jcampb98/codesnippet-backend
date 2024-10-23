@@ -17,7 +17,7 @@ class CodePolicy
         return $user->id !== null;
     }
 
-    public function show(User $user) {
+    public function showAll(User $user) {
         return $user->id !== null;
     }
 

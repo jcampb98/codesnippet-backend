@@ -35,22 +35,21 @@ class CodeController extends Controller
         ]);
     }
 
-    public function show($id) {
-        // Check if the user is authorized to view a code snippet
-        $this->authorize('show', Code::class);
+    public function showAll($userId) {
+        $this->authorize('showAll', Code::class);
 
-        $code = Code::find($id);
+        $codePosts = Code::where('user_id', $userId)->get();
 
-        if(!$code) {
+        if($codePosts->isEmpty()) {
             return response() -> json([
                 'status' => 'error',
-                'message' => 'Code snippet not found',
+                'message' => 'No code snippets found for this user',
             ], 404);
         }
 
         return response() -> json([
             'status' => 'success',
-            'code' => $code,
+            'code' => $codePosts,
         ]);
     }
 
