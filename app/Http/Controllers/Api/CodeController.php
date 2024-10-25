@@ -59,7 +59,7 @@ class CodeController extends Controller
 
         $request -> validate([
             'title' => 'required|string|max:255',
-            'code' => 'required|string|max:255',
+            'code_snippet' => 'required|string|max:255',
         ]);
 
         $code = Code::find($id);

@@ -21,11 +21,11 @@ class CodePolicy
         return $user->id !== null;
     }
 
-    public function update(User $user, Code $code) {
-        return $user->id === $code->user_id;
+    public function update(User $user) {
+        return $user->id !== null;
     }
 
-    public function destroy(User $user, Code $code) {
+    public function destroy(User $user) {
         return $user->id !== null;
     }
 }
