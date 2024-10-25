@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Code;
 
 class CodeController extends Controller
 {
     public function __construct() {
-        $this->middleware(["auth:api", "throttle:60,1"]);
+        $this->middleware(["auth:api", "throttle:60,1"], ['except' => ['showByGuid']]);
     }
 
     public function create(Request $request) {
@@ -26,6 +27,7 @@ class CodeController extends Controller
             'title' => $request -> input('title'),
             'code_snippet' => $request -> input('code_snippet'),
             'user_id' => Auth::id(),
+            'guid' => (string) Str::uuid(),
         ]);
 
         return response() -> json([
@@ -50,6 +52,22 @@ class CodeController extends Controller
         return response() -> json([
             'status' => 'success',
             'code' => $codePosts,
+        ]);
+    }
+
+    public function showByGuid($guid) {
+        $code = Code::where('guid', $guid)->first();
+
+        if(!$code) {
+            return response() -> json([
+                'status' => 'error',
+                'message' => 'Code snippet not found',
+            ], 404);
+        }
+
+        return response() -> json([
+            'status' => 'success',
+            'code' => $code,
         ]);
     }
 

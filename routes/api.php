@@ -22,6 +22,7 @@ Route::controller(PasswordResetController::class) -> group(function () {
 Route::controller(CodeController::class) -> group(function () {
     Route::post('/code/create', 'create');
     Route::get('/code/{id}', 'showAll');
+    Route::get('/code/guid/{guid}', 'showByGuid');
     Route::put('/code/{id}', 'update');
     Route::delete('/code/{id}', 'destroy');
 });
