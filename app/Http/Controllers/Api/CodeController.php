@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\Code;
 
 class CodeController extends Controller
@@ -27,7 +26,6 @@ class CodeController extends Controller
             'title' => $request -> input('title'),
             'code_snippet' => $request -> input('code_snippet'),
             'user_id' => Auth::id(),
-            'guid' => (string) Str::uuid(),
         ]);
 
         return response() -> json([
