@@ -11,7 +11,6 @@ use Validator;
 
 class UserController extends Controller
 {
-
     public function __construct() {
         $this -> middleware("auth:api", ['except' => ['register', 'login']]);
     }
@@ -115,6 +114,67 @@ class UserController extends Controller
             'name' => $user->name,
             'email' => $user->email,
         ]);
+    }
+
+    public function updateUser(Request $request, $userId) {
+        // Check if the user is authorized to update a user account
+        $this->authorize('updateUser', User::class);
+
+        $request -> validate([
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users,email,',
+            'password' => 'nullable|string|min:6'
+        ]);
+
+        $user = User::find($userId);
+
+        if(!$user) {
+            return response() -> json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        if($request->filled('name')) {
+            $user -> name = $request -> name;
+        }
+
+        if($request->filled('email')) {
+            $user -> email = $request -> email;
+        }
+
+        if($request->filled('password')) {
+            $user -> password = Hash::make($request -> password);
+        }
+
+        $user -> save();
+
+        return response() -> json([
+            'status' => 'success',
+            'message' => 'User updated successfully',
+            'code' => $user,
+        ]);
+    }
+
+    public function deleteUser($userId) {
+        // Check if the user is authorized to delete a user account
+        $this->authorize('deleteUser', User::class);
+
+        $user = User::findByID($userId);
+
+        if(!$user) {
+            return response() -> json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $user -> delete();
+
+        return response() -> json([
+            'status' => 'success',
+            'message' => 'User deleted successfully',
+        ], 200);
     }
 
     public function validateToken() {

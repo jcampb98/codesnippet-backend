@@ -9,6 +9,8 @@ Route::controller(UserController::class) -> group(function () {
     Route::post('/auth/register', 'register');
     Route::post('/auth/login', 'login');
     Route::get('/auth/user', 'getUserDetails');
+    Route::patch('/auth/update/{userId}', 'updateUser');
+    Route::post('/auth/delete/{userId}', 'deleteUser');
     Route::get('/validate-token', 'validateToken');
     Route::post('/logout', 'login');
     Route::post('/auth/refresh', 'login');

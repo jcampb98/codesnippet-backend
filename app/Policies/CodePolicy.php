@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Code;
 use App\Models\User;
 
 class CodePolicy
