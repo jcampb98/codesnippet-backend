@@ -160,7 +160,7 @@ class UserController extends Controller
         // Check if the user is authorized to delete a user account
         $this->authorize('deleteUser', User::class);
 
-        $user = User::findByID($userId);
+        $user = User::findOrFail($userId);
 
         if(!$user) {
             return response() -> json([
