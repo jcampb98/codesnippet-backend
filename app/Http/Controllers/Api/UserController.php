@@ -33,34 +33,22 @@ class UserController extends Controller
                 ], 401);
             }
 
-            $isEmailAlreadyTaken = User::where('email', $request->email)->first();
+            $user = User::create([
+                'name' => $request -> name,
+                'email' => $request -> email,
+                'password' => Hash::make($request -> password)
+            ]);
 
-            if($isEmailAlreadyTaken) {
-                return response() -> json([
-                   'status' => 'error',
-                   'message' => 'Email already exists',
-                ], 409);
-            }
-
-            else if(!$isEmailAlreadyTaken) {
-                $user = User::create([
-                    'name' => $request -> name,
-                    'email' => $request -> email,
-                    'password' => Hash::make($request -> password)
-                ]);
-    
-                $token = Auth::login($user);
-
-                return response() -> json([
-                    'status' => 'success',
-                    'message' => 'User Created Successfully',
-                    'user' => $user,
-                    'authorisation' => [
-                        'token' => $token,
-                        'type' => 'bearer'
-                    ]
-                ], 200);
-            }
+            $token = Auth::login($user);
+            return response() -> json([
+                'status' => 'success',
+                'message' => 'User Created Successfully',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer'
+                ]
+            ], 200);
         }
         catch(\Throwable $error) {
             return response() -> json([
