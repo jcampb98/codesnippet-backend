@@ -12,8 +12,8 @@ Route::controller(UserController::class) -> group(function () {
     Route::patch('/auth/update/{userId}', 'updateUser');
     Route::delete('/auth/delete/{userId}', 'deleteUser');
     Route::get('/validate-token', 'validateToken');
-    Route::post('/logout', 'login');
-    Route::post('/auth/refresh', 'login');
+    Route::post('/auth/logout', 'logout');
+    Route::post('/auth/refresh', 'refresh');
 });
 
 Route::controller(PasswordResetController::class) -> group(function () {

@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Validator;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -32,23 +33,34 @@ class UserController extends Controller
                 ], 401);
             }
 
-            $user = User::create([
-                'name' => $request -> name,
-                'email' => $request -> email,
-                'password' => Hash::make($request -> password)
-            ]);
+            $isEmailAlreadyTaken = User::where('email', $request->email)->first();
 
-            $token = Auth::login($user);
+            if($isEmailAlreadyTaken) {
+                return response() -> json([
+                   'status' => 'error',
+                   'message' => 'Email already exists',
+                ], 409);
+            }
 
-            return response() -> json([
-                'status' => 'success',
-                'message' => 'User Created Successfully',
-                'user' => $user,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer'
-                ]
-            ], 200);
+            else if(!$isEmailAlreadyTaken) {
+                $user = User::create([
+                    'name' => $request -> name,
+                    'email' => $request -> email,
+                    'password' => Hash::make($request -> password)
+                ]);
+    
+                $token = Auth::login($user);
+
+                return response() -> json([
+                    'status' => 'success',
+                    'message' => 'User Created Successfully',
+                    'user' => $user,
+                    'authorisation' => [
+                        'token' => $token,
+                        'type' => 'bearer'
+                    ]
+                ], 200);
+            }
         }
         catch(\Throwable $error) {
             return response() -> json([
@@ -187,11 +199,22 @@ class UserController extends Controller
     }
 
     public function logout() {
-        Auth::logout();
-        return response() -> json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        if(!Auth::check()) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        try {
+            JWTAuth::parseToken() -> invalidate();
+
+            Auth::logout();
+
+            return response()->json(['message' => 'Logged out successfully'], 200);
+        }
+        catch(\Exception $e) {
+            return response()->json([
+                'error' => 'Could not log out user'
+            ], 500);
+        }
     }
 
     public function refresh() {

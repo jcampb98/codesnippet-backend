@@ -22,6 +22,9 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        // Other route-specific middleware if needed.
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth:api' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,  // for PHP Open Source Saver JWT package
+        'jwt.auth' => \PhpOpenSourceSaver\JWTAuth\Http\Middleware\Authenticate::class,
+        'jwt.refresh' => \PhpOpenSourceSaver\JWTAuth\Http\Middleware\RefreshToken::class,
     ];
 }

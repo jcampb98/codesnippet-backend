@@ -123,4 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'aliases' => [
+        // other aliases
+        'JWTAuth' => PhpOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
+    ],
+
 ];
