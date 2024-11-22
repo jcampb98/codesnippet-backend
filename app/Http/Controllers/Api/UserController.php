@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log; 
 
 class UserController extends Controller
 {
@@ -129,6 +130,8 @@ class UserController extends Controller
         $user = User::find($userId);
 
         if(!$user) {
+            Log::error("User Not Found in Update User", ["userID" => $userId]);
+
             return response() -> json([
                 'status' => 'error',
                 'message' => 'User not found',
@@ -149,6 +152,8 @@ class UserController extends Controller
 
         $user -> save();
 
+        Log::info("User has been Updated ", ["userID" => $userId]);
+
         return response() -> json([
             'status' => 'success',
             'message' => 'User updated successfully',
@@ -163,6 +168,8 @@ class UserController extends Controller
         $user = User::findOrFail($userId);
 
         if(!$user) {
+            Log::error("User Not Found in Delete User", ["userID" => $userId]);
+
             return response() -> json([
                 'status' => 'error',
                 'message' => 'User not found',
@@ -170,6 +177,8 @@ class UserController extends Controller
         }
 
         $user -> delete();
+
+        Log::info("User has been Deleted", ["userID" => $userId]);
 
         return response() -> json([
             'status' => 'success',

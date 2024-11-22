@@ -54,8 +54,39 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            'channels' => [
+                "debugLog", 
+                "warningLog", 
+                "errorLog",
+                "criticalLog"
+            ],
             'ignore_exceptions' => false,
+        ],
+
+        "infoLog" => [
+            "driver" => "daily",
+            "path" => storage_path("logs/laravel_info.log"),
+            "level" => "info",
+        ],
+        "debugLog" => [
+            "driver" => "daily",
+            "path" => storage_path("logs/laravel_debug.log"),
+            "level" => "debug",
+        ],
+        "warningLog" => [
+            "driver" => "daily",
+            "path" => storage_path("logs/laravel_warning.log"),
+            "level" => "warning",
+        ],
+        "errorLog" => [
+            "driver" => "daily",
+            "path" => storage_path("logs/laravel_error.log"),
+            "level" => "error",
+        ],
+        "criticalLog" => [
+            "driver" => "daily",
+            "path" => storage_path("logs/laravel_urgent.log"),
+            "level" => "critical",
         ],
 
         'single' => [
